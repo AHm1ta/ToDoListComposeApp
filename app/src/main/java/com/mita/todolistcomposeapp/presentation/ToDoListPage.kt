@@ -66,6 +66,7 @@ fun ToDoListPage(viewModel: ToDoViewModel) {
     val selectedTodo = viewModel.getSelectedTodo()
     LaunchedEffect(selectedTodo) {
         if (selectedTodo != null) {
+
             inputText = selectedTodo.title
 
         }
@@ -118,16 +119,16 @@ fun ToDoListPage(viewModel: ToDoViewModel) {
                             inputText = ""
                         }
                     }),
-                   // imeAction = ImeAction.Done
+                    // imeAction = ImeAction.Done
                 )
                 Button(modifier = Modifier
-                    .weight(1f)
+                    .weight(1.2f)
                     .padding(5.dp), onClick = {
                     if (inputText.isNotBlank()) {
                         viewModel.addOrUpdateTodo(inputText)
                         inputText = ""
-                         focusManager.clearFocus()
-                         viewModel.clearSelectedTodo()
+                        focusManager.clearFocus()
+                        viewModel.clearSelectedTodo()
                     } else {
                         Toast.makeText(context, "Please enter a tile", Toast.LENGTH_SHORT)
                             .show()
@@ -135,8 +136,10 @@ fun ToDoListPage(viewModel: ToDoViewModel) {
 
                 }) {
                     Text(
-                        text = if (selectedTodo != null) "Update" else "Add",
-                        color = Color.White
+                        text = if (isEditing) "Update" else "Add",
+                        color = Color.White,
+                        maxLines = 1,
+                        fontSize = 12.sp
                     )
                 }
 
