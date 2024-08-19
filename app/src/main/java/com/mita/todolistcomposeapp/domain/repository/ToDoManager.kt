@@ -1,8 +1,8 @@
-package com.mita.todolistcomposeapp
+package com.mita.todolistcomposeapp.domain.repository
 
 import android.os.Build
 import androidx.annotation.RequiresApi
-import com.mita.todolistcomposeapp.model.ToDoModel
+import com.mita.todolistcomposeapp.data.model.ToDoModel
 import java.time.Instant
 import java.util.Date
 
@@ -21,11 +21,11 @@ object ToDoManager {
     }
 
     fun deleteToDoItem(id: Int) {
-        todoList.removeIf { it.id == id }
+        todoList.removeAll{ it.id == id }
 
     }
 
-    fun updateToDoItem() {
-
+    fun updateToDoItem(updatedTodo: ToDoModel) {
+        todoList.replaceAll { if (it.id == updatedTodo.id) updatedTodo else it }
     }
 }
