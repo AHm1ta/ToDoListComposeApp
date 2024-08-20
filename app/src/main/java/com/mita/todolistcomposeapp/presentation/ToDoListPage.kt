@@ -63,10 +63,9 @@ fun ToDoListPage(viewModel: ToDoViewModel) {
     }
 
     // Update the input fields if a todo is selected for editing
-    val selectedTodo = viewModel.getSelectedTodo()
-    LaunchedEffect(selectedTodo) {
+    LaunchedEffect(viewModel.getSelectedTodo()) {
+        val selectedTodo = viewModel.getSelectedTodo()
         if (selectedTodo != null) {
-
             inputText = selectedTodo.title
 
         }
@@ -148,8 +147,8 @@ fun ToDoListPage(viewModel: ToDoViewModel) {
 
             if (todoList.isNotEmpty()) {
                 TodoList(todos = todoList,
-                    onDeleteClick = { todoId: Int -> viewModel.deleteToDoItem(todoId) },
-                    onEditClick = { todo: ToDoModel -> viewModel.selectTodoForEditing(todo) })
+                    onDeleteClick = { todo -> viewModel.deleteToDoItem(todo) },
+                    onEditClick = { todo -> viewModel.selectTodoForEditing(todo) })
             } else {
                 Box(
                     modifier = Modifier
@@ -173,13 +172,13 @@ fun ToDoListPage(viewModel: ToDoViewModel) {
 @Composable
 fun TodoList(
     todos: List<ToDoModel>,
-    onDeleteClick: (Int) -> Unit,
+    onDeleteClick: (ToDoModel) -> Unit,
     onEditClick: (ToDoModel) -> Unit?,
 ) {
     LazyColumn(Modifier.fillMaxHeight(), content = {
         itemsIndexed(todos) { index: Int, item: ToDoModel ->
             ToDoItem(item = item,
-                onDelete = { onDeleteClick(item.id) },
+                onDelete = { onDeleteClick(item) },
                 onEdit = { onEditClick(item) })
             //divider add
             /*if (index != it.size - 1) {

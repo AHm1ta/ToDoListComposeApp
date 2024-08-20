@@ -1,6 +1,8 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+    alias(libs.plugins.kotlin.kapt)
+
 }
 
 android {
@@ -30,12 +32,14 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
-    kotlinOptions {
+   /* kotlinOptions {
         jvmTarget = "1.8"
-    }
+    }*/
+
+
     buildFeatures {
         compose = true
     }
@@ -61,6 +65,13 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.androidx.compose.runtime.livedata)
     implementation(libs.androidx.compose.runtime.rxjava)
+    implementation(libs.androidx.room.runtime)
+    // Use kapt for annotation processing
+    kapt(libs.androidx.room.compiler)
+    // Optional - Kotlin Extensions and Coroutines support for Room
+    implementation(libs.androidx.room.ktx)
+
+
 
 
     testImplementation(libs.junit)
@@ -70,5 +81,6 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
 
 }

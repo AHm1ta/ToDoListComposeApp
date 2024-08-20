@@ -11,17 +11,24 @@ import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModelProvider
+import com.mita.todolistcomposeapp.data.db.ToDoDatabase
+import com.mita.todolistcomposeapp.domain.repository.ToDoRepository
 import com.mita.todolistcomposeapp.presentation.ToDoListPage
 import com.mita.todolistcomposeapp.presentation.ToDoViewModel
 import com.mita.todolistcomposeapp.ui.theme.ToDoListComposeAppTheme
 
 class MainActivity : ComponentActivity() {
+    private lateinit var viewModel: ToDoViewModel
+
     @OptIn(ExperimentalMaterial3Api::class)
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val toDoViewModel = ViewModelProvider(this)[ToDoViewModel::class.java]
+        val database = ToDoDatabase.getDatabase(this)
+        val repository = ToDoRepository(database.toDoDao())
+        viewModel = ToDoViewModel(repository)
+        //val toDoViewModel = ViewModelProvider(this)[ToDoViewModel::class.java]
         //  enableEdgeToEdge()
         setContent {
             ToDoListComposeAppTheme {
@@ -29,7 +36,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = Color.White
                 ) {
-                    ToDoListPage(toDoViewModel)
+                    ToDoListPage(viewModel = viewModel)
                 }
             }
         }

@@ -2,11 +2,14 @@ package com.mita.todolistcomposeapp.data.model
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import java.time.Instant
 import java.util.Date
 
+@Entity(tableName = "todo_table")
 data class ToDoModel(
-    var id: Int,
+    @PrimaryKey(autoGenerate = true) val id: Int = 0,
     var title: String,
     var createdAt: Date,
 ) /*{

@@ -16,7 +16,9 @@ object ToDoManager {
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun addToDoItem(title: String) {
-        todoList.add(ToDoModel(System.currentTimeMillis().toInt(), title, Date.from(Instant.now())))
+        todoList.add(ToDoModel(System.currentTimeMillis().toInt(), title,
+            Date.from(Instant.now())
+        ))
 
     }
 

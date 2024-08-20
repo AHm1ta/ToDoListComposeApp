@@ -4,13 +4,14 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mita.todolistcomposeapp.domain.repository.ToDoManager
 import com.mita.todolistcomposeapp.data.model.ToDoModel
+import com.mita.todolistcomposeapp.domain.repository.ToDoRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import java.util.Date
 
-class ToDoViewModel : ViewModel() {
+class ToDoViewModel(private val repository: ToDoRepository) : ViewModel() {
     private var _todoItems = MutableStateFlow<List<ToDoModel>>(emptyList())
     val todoItems: StateFlow<List<ToDoModel>> = _todoItems
 
@@ -24,7 +25,9 @@ class ToDoViewModel : ViewModel() {
 
     private fun getAllToDoList() {
         viewModelScope.launch {
-            _todoItems.value = ToDoManager.getAllToDoList().reversed()
+           // _todoItems.value = ToDoManager.getAllToDoList().reversed()
+            //room
+            _todoItems.value = repository.getAllTodos().reversed()
         }
 
 
@@ -33,7 +36,7 @@ class ToDoViewModel : ViewModel() {
     @RequiresApi(Build.VERSION_CODES.O)
     fun addToDoItem(title: String) {
         viewModelScope.launch {
-            ToDoManager.addToDoItem(title)
+            repository.insert(ToDoModel(title = title, createdAt = Date()))
             getAllToDoList()
         }
 
@@ -45,14 +48,22 @@ class ToDoViewModel : ViewModel() {
             val todoToUpdate = _selectedTodo
             if (todoToUpdate != null) {
                 // Update the existing todo
-                ToDoManager.updateToDoItem(
+                /*repository.updateToDoItem(
+                    todoToUpdate.copy(
+                        title = title
+                    )
+                )*/
+                //room
+                repository.update(
                     todoToUpdate.copy(
                         title = title
                     )
                 )
             } else {
                 // Add a new todo
-                ToDoManager.addToDoItem(title)
+                //ToDoManager.addToDoItem(title)
+                //room
+                repository.insert(ToDoModel(title = title, createdAt = Date()))
             }
             _selectedTodo = null
             isEditing.value = false // Exit edit mode
@@ -72,9 +83,9 @@ class ToDoViewModel : ViewModel() {
 
     fun getSelectedTodo(): ToDoModel? = _selectedTodo
 
-    fun deleteToDoItem(int: Int) {
+    fun deleteToDoItem(todo: ToDoModel) {
         viewModelScope.launch {
-            ToDoManager.deleteToDoItem(int)
+            repository.delete(todo)
             getAllToDoList()
         }
 
